@@ -79,7 +79,6 @@ const exportToExcelAndCsv = (albumData, artistName) => {
 
     // Save CSV file
     const csvFileName = `${folderPath}/${artistName}_albums.csv`;
-    // const csvFileName = `./Data/${nameFolder}/ablum-from-artist/${artistName}_albums.csv`;
     const csvData = XLSX.utils.sheet_to_csv(ws);
     fs.writeFileSync(csvFileName, csvData);
     console.log(`CSV file saved as: ${csvFileName}`);
@@ -174,17 +173,33 @@ const fetchMoreAlbums = async (url, token, albumData, artistName) => {
     }
 };
 
-// Example usage with async/await
-const fetchArtistAlbums = async (artistName) => {
-    try {
-        const token = await getAccessToken();
-        const artist = await searchArtist(artistName, token);
-        nameFolder = artist.name;
+const readAlbumsFromExcel = (filePath) => {
+    const workbook = XLSX.readFile(filePath);
+    const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
+    const sheet = workbook.Sheets[sheetName];
+    const data = XLSX.utils.sheet_to_json(sheet);
 
-        if (artist && artist.id) {
-            await getAlbumsByArtistId(artist.id, token, artist.name);
-        } else {
-            console.log('Artist not found or no ID available.');
+    return data; // Returns an array of objects
+};
+
+const fetchArtistAlbums = async (filePath) => {
+    try {
+        const artistsExcel = readAlbumsFromExcel(filePath);
+        console.log(">>>>: ", artistsExcel)
+
+        const token = await getAccessToken();
+        if (!token) return;
+
+        for (const artistExcel of artistsExcel) {
+            // const token = await getAccessToken();
+            const artist = await searchArtist(artistExcel.Name, token);
+            nameFolder = artist.name;
+
+            if (artist && artist.id) {
+                await getAlbumsByArtistId(artist.id, token, artist.name);
+            } else {
+                console.log('Artist not found or no ID available.');
+            }
         }
     } catch (error) {
         console.error('Error fetching artist albums:', error);
@@ -192,4 +207,4 @@ const fetchArtistAlbums = async (artistName) => {
 };
 
 // Example usage
-fetchArtistAlbums('phương ly'); // Replace with any artist name
+fetchArtistAlbums('D:/05-DUT/NAM4-KI1/PBL6/Crawl/vietnamese_artists.xlsx'); // Replace with any artist name

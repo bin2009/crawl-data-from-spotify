@@ -2,14 +2,14 @@ const axios = require('axios');
 const qs = require('qs');
 const xlsx = require('xlsx');
 const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
+
+folderArtists = './Data';
 
 // Spotify API credentials
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
-
-// replace
-let nameFolder = 'Phương Ly';
 
 // Function to get access token from Spotify API
 const getAccessToken = async () => {
@@ -48,7 +48,7 @@ const getTracksByAlbumId = async (albumId, token) => {
 };
 
 // Function to export tracks to Excel and CSV
-const exportTracks = (tracks, albumName, albumId) => {
+const exportTracks = (tracks, albumName, albumId, nameFolder) => {
     const data = tracks.map((track) => {
         const artists = track.artists.map((artist) => `${artist.name} (ID: ${artist.id})`).join(' || ');
 
@@ -64,13 +64,13 @@ const exportTracks = (tracks, albumName, albumId) => {
     });
 
     // Create directory if not exists
-    const folderPath = `./Data/${nameFolder}/ablum-from-artist`;
+    const folderPath = `./Data/${nameFolder}/album-from-artist`;
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
     }
 
     // Define the filename
-    const filename = `${albumName}_${albumId}`;
+    const filename = `${albumId}`;
 
     // Export to Excel
     const ws = xlsx.utils.json_to_sheet(data);
@@ -95,8 +95,9 @@ const readAlbumsFromExcel = (filePath) => {
 };
 
 // Example function to fetch tracks for albums from the Excel file
-const fetchTracksFromAlbumsInExcel = async (filePath) => {
+const fetchTracksFromAlbumsInExcel = async (filePath, nameFolder) => {
     const albums = readAlbumsFromExcel(filePath);
+    // console.log("??????:" , albums)
 
     const token = await getAccessToken();
     if (!token) return;
@@ -104,11 +105,12 @@ const fetchTracksFromAlbumsInExcel = async (filePath) => {
     for (const album of albums) {
         const albumId = album.ID; // Assuming your Excel has an 'id' column
         const albumName = album.Album; // Assuming your Excel has a 'name' column
+        const albumType = album.AlbumType;
 
-        if (albumId && albumName) {
+        if (albumId && albumName && albumType === 'album') {
             const tracks = await getTracksByAlbumId(albumId, token);
             if (tracks) {
-                exportTracks(tracks, albumName, albumId);
+                exportTracks(tracks, albumName, albumId, nameFolder);
             }
         } else {
             console.log('Missing album ID or name.');
@@ -116,5 +118,19 @@ const fetchTracksFromAlbumsInExcel = async (filePath) => {
     }
 };
 
-// Call this function with the path to your Excel file
-fetchTracksFromAlbumsInExcel(`./Data/${nameFolder}/${nameFolder}_albums.xlsx`);
+const listSubfolders = async (folderPath) => {
+    try {
+        // Đọc nội dung của thư mục
+        const items = fs.readdirSync(folderPath);
+
+        items.forEach((item) => {
+            const fullPath = `${folderPath}/${item}`; // Kết hợp đường dẫn
+            // console.log(fullPath)
+            fetchTracksFromAlbumsInExcel(`${fullPath}/${item}_albums.xlsx`, item);
+        });
+    } catch (error) {
+        console.error('Lỗi khi đọc thư mục:', error);
+    }
+};
+
+listSubfolders(folderArtists);
