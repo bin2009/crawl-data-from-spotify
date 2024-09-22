@@ -1,11 +1,15 @@
 const axios = require('axios');
 const qs = require('qs');
 const xlsx = require('xlsx');
-require('dotenv').config()
+const fs = require('fs');
+require('dotenv').config();
 
 // Spotify API credentials
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
+
+// replace
+let nameFolder = 'Phương Ly';
 
 // Function to get access token from Spotify API
 const getAccessToken = async () => {
@@ -59,6 +63,12 @@ const exportTracks = (tracks, albumName, albumId) => {
         };
     });
 
+    // Create directory if not exists
+    const folderPath = `./Data/${nameFolder}/ablum-from-artist`;
+    if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+    }
+
     // Define the filename
     const filename = `${albumName}_${albumId}`;
 
@@ -66,28 +76,45 @@ const exportTracks = (tracks, albumName, albumId) => {
     const ws = xlsx.utils.json_to_sheet(data);
     const wb = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Tracks');
-    xlsx.writeFile(wb, `./Data/tracks-from-album/${filename}.xlsx`);
+    xlsx.writeFile(wb, `${folderPath}/${filename}.xlsx`);
 
     // Export to CSV (using xlsx)
     const csv = xlsx.utils.sheet_to_csv(ws);
-    require('fs').writeFileSync(`./Data/tracks-from-album/${filename}.csv`, csv);
+    fs.writeFileSync(`${folderPath}/${filename}.csv`, csv);
     console.log('CSV file was written successfully');
 };
 
-// Example usage with album ID input
-const fetchTracksFromAlbum = async (albumId, albumName) => {
-    try {
-        const token = await getAccessToken();
-        if (token) {
+// Function to read album IDs and names from an Excel file
+const readAlbumsFromExcel = (filePath) => {
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
+    const sheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(sheet);
+
+    return data; // Returns an array of objects
+};
+
+// Example function to fetch tracks for albums from the Excel file
+const fetchTracksFromAlbumsInExcel = async (filePath) => {
+    const albums = readAlbumsFromExcel(filePath);
+
+    const token = await getAccessToken();
+    if (!token) return;
+
+    for (const album of albums) {
+        const albumId = album.ID; // Assuming your Excel has an 'id' column
+        const albumName = album.Album; // Assuming your Excel has a 'name' column
+
+        if (albumId && albumName) {
             const tracks = await getTracksByAlbumId(albumId, token);
             if (tracks) {
                 exportTracks(tracks, albumName, albumId);
             }
+        } else {
+            console.log('Missing album ID or name.');
         }
-    } catch (error) {
-        console.error('Error fetching tracks from album:', error);
     }
 };
 
-// Call this function with a specific album ID and name
-fetchTracksFromAlbum('4faMbTZifuYsBllYHZsFKJ', 'Ai Cũng Phải Bắt Đầu Từ Đâu Đó'); // Replace 'AlbumName' with the actual album name
+// Call this function with the path to your Excel file
+fetchTracksFromAlbumsInExcel(`./Data/${nameFolder}/${nameFolder}_albums.xlsx`);

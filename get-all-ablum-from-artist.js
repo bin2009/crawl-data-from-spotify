@@ -7,6 +7,8 @@ require('dotenv').config();
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 
+let nameFolder = '';
+
 // Get access token from Spotify
 const getAccessToken = async () => {
     const tokenUrl = 'https://accounts.spotify.com/api/token';
@@ -64,13 +66,20 @@ const exportToExcelAndCsv = (albumData, artistName) => {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Albums');
 
+    // Create directory if not exists
+    const folderPath = `./Data/${nameFolder}/`;
+    if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+    }
+
     // Save Excel file
-    const excelFileName = `./Data/${artistName}_albums.xlsx`;
+    const excelFileName = `${folderPath}/${artistName}_albums.xlsx`;
     XLSX.writeFile(wb, excelFileName);
     console.log(`Excel file saved as: ${excelFileName}`);
 
     // Save CSV file
-    const csvFileName = `./Data/${artistName}_albums.csv`;
+    const csvFileName = `${folderPath}/${artistName}_albums.csv`;
+    // const csvFileName = `./Data/${nameFolder}/ablum-from-artist/${artistName}_albums.csv`;
     const csvData = XLSX.utils.sheet_to_csv(ws);
     fs.writeFileSync(csvFileName, csvData);
     console.log(`CSV file saved as: ${csvFileName}`);
@@ -135,7 +144,8 @@ const fetchMoreAlbums = async (url, token, albumData, artistName) => {
 
         // Append more albums
         const moreAlbumData = albums.map((album) => {
-            const albumImageUrl = album.images.length > 0 ? album.images[0].url : 'No image available';
+            const albumImageUrl = album.images.map((image) => `${image.url}`).join(' || ');
+            // const albumImageUrl = album.images.length > 0 ? album.images[0].url : 'No image available';
             const artists = album.artists.map((artist) => `${artist.name} (ID: ${artist.id})`).join(' || ');
 
             return {
@@ -169,6 +179,7 @@ const fetchArtistAlbums = async (artistName) => {
     try {
         const token = await getAccessToken();
         const artist = await searchArtist(artistName, token);
+        nameFolder = artist.name;
 
         if (artist && artist.id) {
             await getAlbumsByArtistId(artist.id, token, artist.name);
@@ -181,4 +192,4 @@ const fetchArtistAlbums = async (artistName) => {
 };
 
 // Example usage
-fetchArtistAlbums('hieu thu hai'); // Replace with any artist name
+fetchArtistAlbums('phương ly'); // Replace with any artist name
