@@ -97,7 +97,6 @@ const readAlbumsFromExcel = (filePath) => {
 // Example function to fetch tracks for albums from the Excel file
 const fetchTracksFromAlbumsInExcel = async (filePath, nameFolder) => {
     const albums = readAlbumsFromExcel(filePath);
-    // console.log("??????:" , albums)
 
     const token = await getAccessToken();
     if (!token) return;
@@ -106,8 +105,11 @@ const fetchTracksFromAlbumsInExcel = async (filePath, nameFolder) => {
         const albumId = album.ID; // Assuming your Excel has an 'id' column
         const albumName = album.Album; // Assuming your Excel has a 'name' column
         const albumType = album.AlbumType;
+        const totalTracks = album.TotalTracks;
 
-        if (albumId && albumName && albumType === 'album') {
+        if (totalTracks === 1) continue;
+
+        if (albumId && albumName) {
             const tracks = await getTracksByAlbumId(albumId, token);
             if (tracks) {
                 exportTracks(tracks, albumName, albumId, nameFolder);
@@ -120,16 +122,13 @@ const fetchTracksFromAlbumsInExcel = async (filePath, nameFolder) => {
 
 const listSubfolders = async (folderPath) => {
     try {
-        // Đọc nội dung của thư mục
         const items = fs.readdirSync(folderPath);
-
         items.forEach((item) => {
-            const fullPath = `${folderPath}/${item}`; // Kết hợp đường dẫn
-            // console.log(fullPath)
+            const fullPath = `${folderPath}/${item}`;
             fetchTracksFromAlbumsInExcel(`${fullPath}/${item}_albums.xlsx`, item);
         });
     } catch (error) {
-        console.error('Lỗi khi đọc thư mục:', error);
+        console.error('Error folder:', error);
     }
 };
 

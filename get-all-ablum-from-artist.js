@@ -106,12 +106,17 @@ const getAlbumsByArtistId = async (artistId, token, artistName) => {
             const albumImageUrl = album.images.length > 0 ? album.images[0].url : 'No image available';
             const artists = album.artists.map((artist) => `${artist.name} (ID: ${artist.id})`).join(' || ');
 
+            var alType = '';
+            if (album.album_type === 'single') {
+                alType = parseInt(album.total_tracks) > 1 ? 'EP' : 'single';
+            } else alType = 'album';
+
             return {
                 ID: album.id,
                 Album: album.name,
                 ReleaseDate: album.release_date,
                 Artists: artists,
-                AlbumType: album.album_type,
+                AlbumType: alType,
                 TotalTracks: album.total_tracks,
                 AlbumImage: albumImageUrl,
                 Type: album.type,
@@ -147,12 +152,17 @@ const fetchMoreAlbums = async (url, token, albumData, artistName) => {
             // const albumImageUrl = album.images.length > 0 ? album.images[0].url : 'No image available';
             const artists = album.artists.map((artist) => `${artist.name} (ID: ${artist.id})`).join(' || ');
 
+            var alType = '';
+            if (album.album_type === 'single') {
+                alType = parseInt(album.total_tracks) > 1 ? 'EP' : 'single';
+            } else alType = 'album';
+
             return {
                 ID: album.id,
                 Album: album.name,
                 ReleaseDate: album.release_date,
                 Artists: artists,
-                AlbumType: album.album_type,
+                AlbumType: alType,
                 TotalTracks: album.total_tracks,
                 AlbumImage: albumImageUrl,
                 Type: album.type,
@@ -185,13 +195,11 @@ const readAlbumsFromExcel = (filePath) => {
 const fetchArtistAlbums = async (filePath) => {
     try {
         const artistsExcel = readAlbumsFromExcel(filePath);
-        console.log(">>>>: ", artistsExcel)
 
         const token = await getAccessToken();
         if (!token) return;
 
         for (const artistExcel of artistsExcel) {
-            // const token = await getAccessToken();
             const artist = await searchArtist(artistExcel.Name, token);
             nameFolder = artist.name;
 
@@ -207,4 +215,4 @@ const fetchArtistAlbums = async (filePath) => {
 };
 
 // Example usage
-fetchArtistAlbums('D:/05-DUT/NAM4-KI1/PBL6/Crawl/vietnamese_artists.xlsx'); // Replace with any artist name
+fetchArtistAlbums('D:/05-DUT/NAM4-KI1/PBL6/Crawl/Data-Artist/vietnamese_artists.xlsx'); // Replace with any artist name
