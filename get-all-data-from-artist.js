@@ -130,7 +130,7 @@ const getAlbumsByArtistId = async (artistId, token, artistName) => {
         let albumData = [];
 
         for (const album of albums) {
-            const albumImageUrl = album.images.length > 0 ? album.images[0].url : 'No image available';
+            const albumImageUrl = album.images.map((img) => `${img.url} (size: ${img.height})`).join(' || ');
             const artists = album.artists.map((artist) => `${artist.name} (ID: ${artist.id})`).join(' || ');
 
             var alType = '';
