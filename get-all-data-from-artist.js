@@ -3,6 +3,7 @@ const qs = require('qs');
 const XLSX = require('xlsx');
 const fs = require('fs');
 require('dotenv').config();
+const unidecode = require('unidecode');
 
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
@@ -54,6 +55,13 @@ const searchArtist = async (artistName, token) => {
     }
 };
 
+const convertToNonAccented = (text) => {
+    text = unidecode(text);
+    text = text.replaceAll(' ', '');
+    console.log(text);
+    return text;
+};
+
 // Export data to Excel and CSV
 const exportToExcelAndCsv = (albumData, artistName) => {
     if (albumData.length === 0) {
@@ -66,19 +74,23 @@ const exportToExcelAndCsv = (albumData, artistName) => {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Albums and Tracks');
 
+    const nameFolderNew = convertToNonAccented(nameFolder);
+
     // Create directory if not exists
-    const folderPath = `./Data/${nameFolder}/`;
+    const folderPath = `./Data/${nameFolderNew}`;
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
     }
 
+    const artistNameSave = convertToNonAccented(artistName);
+
     // Save Excel file
-    const excelFileName = `${folderPath}/${artistName}_albums_tracks.xlsx`;
+    const excelFileName = `${folderPath}/${artistNameSave}_albums_tracks.xlsx`;
     XLSX.writeFile(wb, excelFileName);
     console.log(`Excel file saved as: ${excelFileName}`);
 
     // Save CSV file
-    const csvFileName = `${folderPath}/${artistName}_albums_tracks.csv`;
+    const csvFileName = `${folderPath}/${artistNameSave}_albums_tracks.csv`;
     const csvData = XLSX.utils.sheet_to_csv(ws);
     fs.writeFileSync(csvFileName, csvData);
     console.log(`CSV file saved as: ${csvFileName}`);

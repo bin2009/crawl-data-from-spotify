@@ -1,0 +1,33 @@
+# D:\05-DUT\NAM4-KI1\PBL6\Crawl\download_album.txt
+
+# album
+https://open.spotify.com/album/6aEEwNz2KOS7SbkRkxqHYY
+https://open.spotify.com/album/6NP86YuxJPF2GHOBNTMpCc
+https://open.spotify.com/album/510BUzOakN9jFnXxCIQGDP
+https://open.spotify.com/album/2jZv1yhAGKya4OviYjUETX
+https://open.spotify.com/album/7wXVeb0pVqLfZ5WVmxXA8q
+https://open.spotify.com/album/631STqAurIq8XJeJWTWGMz
+https://open.spotify.com/album/5yz8mhUobFvbVa4RBLxk6e
+https://open.spotify.com/album/2nwci1BEAEcMM1ziZz0UGU
+https://open.spotify.com/album/54IS5vZGbBvIKeVIjP10Xm
+https://open.spotify.com/album/76aWvp3IQ3PykI99NCR1dO
+https://open.spotify.com/album/5Sm1vQHlE2M4SM4hB4yNrS
+https://open.spotify.com/album/65ndgGA3qC5uecA3Irjq5q
+https://open.spotify.com/album/3KhnKKapTvZFd3c39XLBMN
+https://open.spotify.com/album/1z4b3GQkF6BzGlphdgEuSU
+https://open.spotify.com/album/4dWNdvNAXN93v6Rcz4wSmb
+https://open.spotify.com/album/4dWNdvNAXN93v6Rcz4wSmb
+https://open.spotify.com/album/7dO9xxuA8jxsznzhwfPyuR
+https://open.spotify.com/album/4sPaJG7wkuZjLXlPT5NKUb
+https://open.spotify.com/album/1APrRP3zoYX0OSoyIfM0V6
+https://open.spotify.com/album/1APrRP3zoYX0OSoyIfM0V6
+https://open.spotify.com/album/6wq4AQ54xewwbVI8Rn8n6d
+https://open.spotify.com/album/2pSU42cYx6QGJhJS82vPFP
+https://open.spotify.com/album/52oZQp5Au2YhGNGkhVqh1Q
+https://open.spotify.com/album/52oZQp5Au2YhGNGkhVqh1Q
+https://open.spotify.com/album/52oZQp5Au2YhGNGkhVqh1Q
+https://open.spotify.com/album/52oZQp5Au2YhGNGkhVqh1Q
+https://open.spotify.com/album/52oZQp5Au2YhGNGkhVqh1Q
+https://open.spotify.com/album/7D2YrjULpvmD9XvdRwWR4x
+https://open.spotify.com/album/7D2YrjULpvmD9XvdRwWR4x
+https://open.spotify.com/album/7D2YrjULpvmD9XvdRwWR4x
