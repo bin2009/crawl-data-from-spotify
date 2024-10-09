@@ -5,30 +5,46 @@ import re
 # Danh sách định dạng âm thanh
 audio_extensions = ['.mp3', '.wav', '.flac', '.aac', '.m4a']
 
-# Hàm chuyển không dấu
-def convert_to_non_accented(text):
-    return unidecode.unidecode(text)
-
-# Hàm lấy tên audio (xóa số thứ tự đầu)
-# def get_song_name(song):
-#     return re.sub(r'^/d+/s+', '', song)  # Loại bỏ số thứ tự ở đầu tên bài hát
-
+def rename(name):
+    cleaned_name = unidecode.unidecode(name)
+    cleaned_name = name.replace(" ", "")
+    cleaned_name = re.sub(r'[^a-zA-Z0-9\s]', '', cleaned_name)
+    return cleaned_name
 
 def get_song_name(song):
-    return song.split(" ", 1)[1]  
+    parts = song.split(" ", 1)
+    if len(parts) > 1 and parts[1]:
+        return parts[1].strip()  # Loại bỏ khoảng trắng ở đầu và cuối chuỗi
+    return song.strip()  # Trả về chuỗi đầu vào nếu không có khoảng trắng
 
-# Hàm xóa khoảng trắng
-def remove_spaces(text):
-    return text.replace(" ", "")  # Xóa khoảng trắng
+def rename_song(name):
+    cleaned_name = unidecode.unidecode(name)
+    basename, dot, extension = cleaned_name.rpartition(".")
+
+    cleaned_name = basename.replace(" ", "")
+    cleaned_name = re.sub(r'[^a-zA-Z0-9\s]', '', cleaned_name)
+    # print(a)
+    return cleaned_name + dot + extension
+    
+    # print("1: ", parts[0])
+    # print("2: ", parts[1])
+    # print("3: ", parts[2])
+
+# def get_song_name(song):
+#     parts = song.split(" ", 1)
+#     if len(parts) > 1 and parts[1]:
+#         return parts[1].strip()  # Loại bỏ khoảng trắng ở đầu và cuối chuỗi
+#     return song.strip()  # Trả về chuỗi đầu vào nếu không có khoảng trắng
+
 
 # Đường dẫn tới thư mục gốc
-parent_folder = 'D:/05-DUT/NAM4-KI1/PBL6/loc'  # Thay đổi thành đường dẫn đúng
+parent_folder = 'D:/05-DUT/NAM4-KI1/PBL6/loc2'  # Thay đổi thành đường dẫn đúng
 
 # Hàm xử lý thư mục và tệp
 def process_folder(folder_path):
     # Đổi tên thư mục
     original_folder_name = os.path.basename(folder_path)
-    new_folder_name = remove_spaces(convert_to_non_accented(original_folder_name))
+    new_folder_name = rename(original_folder_name)
     new_folder_path = os.path.join(os.path.dirname(folder_path), new_folder_name)
 
     if folder_path != new_folder_path:
@@ -45,11 +61,13 @@ def process_folder(folder_path):
             # Nếu là tệp
             if any(item.endswith(ext) for ext in audio_extensions):
                 # Xử lý tệp âm thanh
-                print("loc:",item)
-                print()
+                # print("loc:",item)
+                # print()
                 song_name = get_song_name(item)
-                print(song_name)
-                new_song_name = remove_spaces(convert_to_non_accented(song_name))
+                # print(song_name)
+
+                new_song_name = rename_song(song_name)
+                # new_song_name = remove_spaces(convert_to_non_accented(song_name))
                 new_song_path = os.path.join(new_folder_path, new_song_name)
 
                 # Đổi tên tệp nếu cần thiết

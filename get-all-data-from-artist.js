@@ -30,6 +30,9 @@ const getAccessToken = async () => {
     }
 };
 
+// Hàm để thêm thời gian chờ
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Search for an artist by name
 const searchArtist = async (artistName, token) => {
     const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist`;
@@ -53,6 +56,9 @@ const searchArtist = async (artistName, token) => {
     } catch (error) {
         console.error('Error searching for artist:', error);
     }
+
+    // Thêm thời gian chờ sau mỗi request
+    await delay(1000);
 };
 
 const convertToNonAccented = (text) => {
@@ -120,6 +126,9 @@ const getTracksByAlbumId = async (albumId, token) => {
         console.error('Error fetching tracks for album:', error);
         return [];
     }
+
+    // Thêm thời gian chờ sau mỗi request
+    // await delay(1000);
 };
 
 // Fetch albums by artist ID and their tracks
@@ -173,6 +182,9 @@ const getAlbumsByArtistId = async (artistId, token, artistName) => {
                     PreviewUrl: track.PreviewUrl,
                 });
             });
+
+            // Thêm thời gian chờ sau mỗi request
+            await delay(1000);
         }
 
         // Export the data to Excel and CSV files
@@ -227,6 +239,8 @@ const fetchMoreAlbums = async (url, token, albumData, artistName) => {
                     PreviewUrl: track.PreviewUrl,
                 });
             });
+            // Thêm thời gian chờ sau mỗi request
+            await delay(1000);
         }
 
         // Recursively fetch more albums if there are more pages
