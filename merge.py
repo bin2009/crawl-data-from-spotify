@@ -3,6 +3,13 @@ import pandas as pd
 import unicodedata
 import unidecode
 import re
+from decouple import config
+
+
+CLOUD = config('CLOUD')
+OLD = config('FOLDER')
+print(CLOUD)
+print(OLD)
 
 # Hàm để lấy tên bài hát (bỏ phần số thứ tự và đuôi file)
 def get_song_name(song):
@@ -96,6 +103,8 @@ for index, row in merge_file.iterrows():
         temp = check_song_exists(row2.TrackName, list_path) 
         # print(">>>>>", temp)
         if temp:
+            # print(temp)
+            temp['path'] = temp['path'].replace(OLD, CLOUD)
             df1.at[index2, 'audio_path'] = temp['path']  
             list_path = [x for x in list_path if x['id'] != temp['id']]
     # print(list_path)

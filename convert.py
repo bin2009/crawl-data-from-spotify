@@ -38,7 +38,7 @@ def rename_song(name):
 
 
 # Đường dẫn tới thư mục gốc
-parent_folder = 'D:/05-DUT/NAM4-KI1/PBL6/loc2'  # Thay đổi thành đường dẫn đúng
+parent_folder = 'D:/05-DUT/NAM4-KI1/PBL6/loc'  # Thay đổi thành đường dẫn đúng
 
 # Hàm xử lý thư mục và tệp
 def process_folder(folder_path):
@@ -72,8 +72,15 @@ def process_folder(folder_path):
 
                 # Đổi tên tệp nếu cần thiết
                 if item_path != new_song_path:
-                    os.rename(item_path, new_song_path)
-                    print(f"Renamed file: {item_path} -> {new_song_path}")
+                    # os.rename(item_path, new_song_path)
+                    # print(f"Renamed file: {item_path} -> {new_song_path}")
+
+                    # Kiểm tra xem tệp mới đã tồn tại chưa
+                    if not os.path.exists(new_song_path):
+                        os.rename(item_path, new_song_path)
+                        print(f"Renamed file: {item_path} -> {new_song_path}")
+                    else:
+                        print(f"File already exists, skipping: {new_song_path}")
 
 # Bắt đầu xử lý từ thư mục gốc
 for folder in os.listdir(parent_folder):

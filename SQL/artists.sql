@@ -1,0 +1,1 @@
+INSERT INTO "Artist" ("id", "name", "avatar", "bio", "createdAt", "updatedAt") VALUES('2xvW7dgL1640K8exTcRMS4', 'Chillies', 'https://i.scdn.co/image/ab67616100005174ae678a70cd3899b2167026ea', 'Null', NOW(), NOW());

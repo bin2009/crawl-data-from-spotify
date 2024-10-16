@@ -109,26 +109,47 @@ const getTracksByAlbumId = async (albumId, token) => {
         Authorization: `Bearer ${token}`,
     };
 
-    try {
-        const response = await axios.get(tracksUrl, { headers });
-        const tracks = response.data.items;
+    let allTracks = [];
+    let offset = 0;
+    let limit = 40;
+    let hasMoreTracks = true;
 
-        return tracks.map((track) => ({
-            TrackName: track.name,
-            TrackID: track.id,
-            Artists: track.artists.map((artist) => `${artist.name} (ID: ${artist.id})`).join(' || '),
-            Duration: track.duration_ms,
-            DiscNumber: track.disc_number,
-            PreviewUrl: track.preview_url || 'No preview available',
-            TrackNumber: track.track_number,
-        }));
-    } catch (error) {
-        console.error('Error fetching tracks for album:', error);
-        return [];
+    while (hasMoreTracks) {
+        try {
+            const response = await axios.get(tracksUrl, {
+                headers,
+                params: {
+                    offset,
+                    limit,
+                },
+            });
+            const tracks = response.data.items;
+            allTracks = allTracks.concat(
+                tracks.map((track) => ({
+                    TrackName: track.name,
+                    TrackID: track.id,
+                    Artists: track.artists.map((artist) => `${artist.name} (ID: ${artist.id})`).join(' || '),
+                    Duration: track.duration_ms,
+                    DiscNumber: track.disc_number,
+                    PreviewUrl: track.preview_url || 'No preview available',
+                    TrackNumber: track.track_number,
+                })),
+            );
+
+            // Kiểm tra xem còn track nào nữa không
+            hasMoreTracks = tracks.length === limit;
+            offset += limit;
+
+            // Thêm thời gian chờ 1 giây giữa các yêu cầu
+            if (hasMoreTracks) {
+                await delay(1000);
+            }
+        } catch (error) {
+            console.error('Error fetching tracks for album:', error);
+            return allTracks;
+        }
     }
-
-    // Thêm thời gian chờ sau mỗi request
-    // await delay(1000);
+    return allTracks;
 };
 
 // Fetch albums by artist ID and their tracks
