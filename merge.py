@@ -61,14 +61,14 @@ def check_song_exists(song_name, audio_data):
 
 
 
-merge_file = pd.read_excel('D:/05-DUT/NAM4-KI1/PBL6/Crawl/merge.xlsx')
+merge_file = pd.read_excel('D:/DUT/NAM4-KI1/PBL6/CRAWL/crawl-data-from-spotify/merge.xlsx')
 for index, row in merge_file.iterrows():
     df1 = pd.read_csv(row['album'])
     df1['audio_path'] = None  # Tạo cột mới để lưu đường dẫn tệp âm thanh
 
     # Khai báo đường dẫn đến thư mục chứa các file âm thanh
     folder_path = row['audio']
-
+    # print(folder_path)
     # Khai báo các đuôi file âm thanh và hình ảnh
     audio_extensions = ['.mp3', '.wav', '.flac', '.aac', '.m4a']
 
@@ -80,9 +80,11 @@ for index, row in merge_file.iterrows():
         i = 0
         albums = os.listdir(folder_path)
         for album in albums:
+            # print(album)
             album_path = folder_path + '/' + album
             if os.path.isdir(album_path):  
-                audios = os.listdir(album_path) 
+                audios = os.listdir(album_path)
+                # print(audios) 
 
                 for audio in audios:
                     if any(audio.endswith(ext) for ext in audio_extensions):

@@ -38,7 +38,7 @@ def rename_song(name):
 
 
 # Đường dẫn tới thư mục gốc
-parent_folder = 'D:/05-DUT/NAM4-KI1/PBL6/loc'  # Thay đổi thành đường dẫn đúng
+parent_folder = 'D:/DUT/NAM4-KI1/PBL6/AUDIO'  # Thay đổi thành đường dẫn đúng
 
 # Hàm xử lý thư mục và tệp
 def process_folder(folder_path):

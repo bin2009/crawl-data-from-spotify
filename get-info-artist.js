@@ -138,8 +138,8 @@ const getInfo = async (filePath) => {
         }
 
         // Save to CSV and Excel
-        saveToCSV(artistInfoList, 'D:/05-DUT/NAM4-KI1/PBL6/Crawl/Data-Artist/inf.csv');
-        saveToExcel(artistInfoList, 'D:/05-DUT/NAM4-KI1/PBL6/Crawl/Data-Artist/inf.xlsx');
+        saveToCSV(artistInfoList, 'D:/DUT/NAM4-KI1/PBL6/CRAWL/crawl-data-from-spotify/Data-Artist/inf.csv');
+        saveToExcel(artistInfoList, 'D:/DUT/NAM4-KI1/PBL6/CRAWL/crawl-data-from-spotify/Data-Artist/inf.xlsx');
 
         console.log('Artist information saved to artist_info.csv and artist_info.xlsx');
     } catch (error) {
@@ -148,5 +148,5 @@ const getInfo = async (filePath) => {
 };
 
 // Specify the path to your Excel file containing artist names
-const filePath = 'D:/05-DUT/NAM4-KI1/PBL6/Crawl/Data-Artist/vietnamese_artists.xlsx';
+const filePath = 'D:/DUT/NAM4-KI1/PBL6/CRAWL/crawl-data-from-spotify/Data-Artist/artist.xlsx';
 getInfo(filePath);

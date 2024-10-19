@@ -308,4 +308,4 @@ const fetchArtistAlbums = async (filePath) => {
 };
 
 // Example usage
-fetchArtistAlbums('D:/05-DUT/NAM4-KI1/PBL6/Crawl/Data-Artist/vietnamese_artists.xlsx'); // Replace with your file path
+fetchArtistAlbums('D:/DUT/NAM4-KI1/PBL6/CRAWL/crawl-data-from-spotify/Data-Artist/vietnamese_artists.xlsx'); // Replace with your file path
