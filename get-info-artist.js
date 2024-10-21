@@ -148,5 +148,5 @@ const getInfo = async (filePath) => {
 };
 
 // Specify the path to your Excel file containing artist names
-const filePath = 'D:/DUT/NAM4-KI1/PBL6/CRAWL/crawl-data-from-spotify/Data-Artist/artist.xlsx';
+const filePath = 'D:/DUT/NAM4-KI1/PBL6/CRAWL/crawl-data-from-spotify/Data-Artist/AAA.xlsx';
 getInfo(filePath);
