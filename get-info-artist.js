@@ -90,14 +90,14 @@ const readArtistsFromExcel = (filePath) => {
 
 // Function to save artist info to CSV
 const saveToCSV = (data, fileName) => {
-    const csvHeader = 'Artist ID, Artist Name, Popularity, Genres, Images\n';
+    const csvHeader = 'Artist ID, Artist Name, Popularity, Genres, Images, Follow\n';
     const csvRows = data
         .map((artist) => {
             const genres = artist.genres ? artist.genres.join(' || ') : 'N/A';
             // const images = artist.images && artist.images.length > 0
             //     ? artist.images.map(img => img.url).join(', ')
             //     : 'No image available'; // Ensure images exist before accessing length
-            return `${artist.id}, ${artist.name}, ${artist.popularity}, ${genres}, ${artist.images}`;
+            return `${artist.id}, ${artist.name}, ${artist.popularity}, ${genres}, ${artist.images}, ${artist.followers}`;
         })
         .join('\n');
 
@@ -133,6 +133,7 @@ const getInfo = async (filePath) => {
                     popularity: artistInfo.popularity,
                     genres: artistInfo.genres,
                     images: imgs,
+                    followers: artistInfo.followers.total,
                 });
             }
         }
